@@ -15,15 +15,23 @@ server_socket.bind((host, port))
 # set the server to listen for incoming connections
 server_socket.listen(5)
 
+print(f"Server listening on {host}:{port}")
+
 while True:
     # establish a connection
     client_socket, address = server_socket.accept()
 
     print(f"Got a connection from {address}")
 
-    # send a message to the client
-    message = "Thank you for connecting"
-    client_socket.send(message.encode())
+    # receive the filename from the client
+    filename = client_socket.recv(1024).decode()
+
+    # open the file and read the contents
+    with open(filename, "rb") as file:
+        file_data = file.read()
+
+    # send the file contents to the client
+    client_socket.sendall(file_data)
 
     # close the connection
     client_socket.close()
