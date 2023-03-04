@@ -3,7 +3,7 @@ import numpy as np
 import json
 
 # Load the image
-image = cv2.imread("1.png")
+image = cv2.imread("output.png")
 
 # Convert the image from BGR to RGB color space
 image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -29,16 +29,16 @@ for contour in red_contours:
     red_points.append((cx, cy))
 
 # Print the coordinates of the red points
-print("Red points:")
+#print("Red points:")
 #print(red_points)
 print("Length",len(red_points))
 red_points.reverse()
-#print(red_points)
+print(red_points)
 my_dict = {(index+1): item for index, item in enumerate(red_points)}
 
 # Print the dictionary
 #print(my_dict)
 
-with open('dict.json', 'w') as f:
+with open('coord_dict.json', 'w') as f:
     json.dump(my_dict, f )
 
