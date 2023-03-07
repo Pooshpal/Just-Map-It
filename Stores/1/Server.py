@@ -1,8 +1,8 @@
 from flask import Flask, request, jsonify, send_file
 import threading
 
-
 app = Flask(__name__)
+
 class Server_Logs:
     def __init__(self):
         self.lock = threading.Lock()
@@ -35,7 +35,7 @@ class Server:
         server_log.add_client(client_ip,"Fetching Map")
         # Parse JSON data from client
         data = request.get_json()
-        image_path = '../Stores/'+str(data['storeID'])+'/map.png'
+        image_path = './Assets/map.png'
         # Serve the image
         image = server_log.serve_image(image_path)
         # Remove client from list of connected clients
