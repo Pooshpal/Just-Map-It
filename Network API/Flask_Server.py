@@ -60,7 +60,11 @@ class Server:
         client_ip = request.remote_addr
         server_log.add_client(client_ip,"Fetching Directions")
         data = request.get_json()
-        #call function and send it data['itemList'] and start as default. store returned json as variable
+        #call function and send it data['itemList'] and startNode as default. store returned json as variable
+        # returned json should be :
+        # {destination_1:{items:['apple','banana'],path:[1,2,3,4]},destination_2:... ,billing:{items:None,path:[]}}
+        # The path shd be : the previous destination to this one. for destination_1 , it shd be start to destination_1
+        # the path shd als have the last destination to billing as last entry.
         json = {'Directions':'Yes'}
         server_log.remove_client(client_ip,"Fetching Directions")
         return jsonify(json)
