@@ -1,6 +1,6 @@
 import requests
 
-url = 'http://localhost:5000/api'
+url = 'http://localhost:5000/getMap'
 payload = {'key': 'value'}
 headers = {'content-type': 'application/json'}
 
