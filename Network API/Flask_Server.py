@@ -41,6 +41,45 @@ class Server:
         # Remove client from list of connected clients
         server_log.remove_client(client_ip)
         return image
+    
+    @app.route('/getMetadata', methods=['POST'])
+    def getMetadata(): 
+        client_ip = request.remote_addr
+        server_log.add_client(client_ip)
+        data = request.get_json()
+        json_path = ''
+        json = {}
+        server_log.remove_client(client_ip)
+        return json
+    
+    @app.route('/getDirections', methods=['POST'])
+    def getDirections():
+        client_ip = request.remote_addr
+        server_log.add_client(client_ip)
+        data = request.get_json()
+        #call function and send it data['itemList'] and start as default. store returned json as variable
+        json = {}
+        server_log.remove_client(client_ip)
+        return json
+    
+    @app.route('/getLocation', methods=['POST'])
+    def getLocation():
+        client_ip = request.remote_addr
+        server_log.add_client(client_ip)
+        data = request.get_json()
+        #call function and send it data['item'] store returned json as variable
+        json = {}
+        server_log.remove_client(client_ip)
+        return json
+    
+    @app.route('/Test', methods=['POST'])
+    def getTest():
+        client_ip = request.remote_addr
+        server_log.add_client(client_ip)
+        data = request.get_json()
+        json = {'status':200}
+        server_log.remove_client(client_ip)
+        return json
 
 
 app.run(host='0.0.0.0', port=5000, threaded=True)
