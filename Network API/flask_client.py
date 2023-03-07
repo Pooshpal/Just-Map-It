@@ -23,8 +23,9 @@ class Client:
         payload = {'storeID': storeID}
         response = requests.post(url, json=payload)
         if response.status_code == 200:
-            with open("./temp/metadata.json", "w") as outfile:
-                outfile.write(json.dumps(response))
+            #print(response.json())
+            with open('./temp/metadata.json', 'w') as f:
+                json.dump(response.json(), f)
             return "Success"
         else:
             return "Failed to retrieve metadata. Status code: {response.status_code}"
@@ -34,8 +35,9 @@ class Client:
         payload = {'storeID': storeID,'itemList':items.split()}
         response = requests.post(url, json=payload)
         if response.status_code == 200:
-            with open("./temp/Directions.json", "w") as outfile:
-                outfile.write(json.dumps(response))
+            #print(response.json())
+            with open('./temp/directions.json', 'w') as f:
+                json.dump(response.json(), f)
             return "Success"
         else:
             return "Failed to retrieve Directions. Status code: {response.status_code}"
@@ -45,8 +47,8 @@ class Client:
         payload = {'storeID': storeID,'item':item}
         response = requests.post(url, json=payload)
         if response.status_code == 200:
-            with open("./temp/CurrentLocation.json", "w") as outfile:
-                outfile.write(json.dumps(response))
+            with open('./temp/location.json', 'w') as f:
+                json.dump(response.json(), f)
             return "Success"
         else:
             return "Failed to retrieve Current Location. Status code: {response.status_code}"
