@@ -47,7 +47,10 @@ class Server:
         client_ip = request.remote_addr
         server_log.add_client(client_ip,"Fetching Metadata")
         data = request.get_json()
-        json_path = ''
+        # Metadata has to contain : a catalog of all items present section wise in the store and a list of all items present. 
+        # { 'all_items' : [] , section_wise_items : {'section_name' : [],}}
+        # load this metadata into variable json
+        json_path = './Store/'+str(data['storeID'])+'/metadata.json'
         json = {'Metadata':'Yes'}
         server_log.remove_client(client_ip,"Fetching Metadata")
         return jsonify(json)
