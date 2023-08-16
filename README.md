@@ -1,2 +1,2 @@
 # Just-Map-It
-Indoor Navigation Positioning System
+Indoor Navigation Positioning System.
