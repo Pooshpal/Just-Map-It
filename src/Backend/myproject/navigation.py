@@ -3,7 +3,7 @@ import numpy as np
 import heapq
 import json
 def getDirection(list_items):   
-    with open('D:/Projects/Just-Map-It/src/Backend/myproject/assets/metadata.json', 'r') as f:
+    with open('./assets/metadata.json', 'r') as f:
         data = json.load(f)
     section_list = data['sectionWiseItemList']
     coord_dict = data['coord_dict']
