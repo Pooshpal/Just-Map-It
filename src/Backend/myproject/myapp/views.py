@@ -1,6 +1,7 @@
 from django.http import JsonResponse
-from backend import getMap, getMetadata, getItems, getDirections
+from backend import getMap, getMetadata, getDirections
 from .models import Item, ReceivedList
+import json
 
 def get_map(request):
     print(f"User ID: {request.user.id} Request Type: getMap")
@@ -12,26 +13,23 @@ def get_metadata(request):
     data = getMetadata()
     return JsonResponse(data)
 
-def get_items(request):
-    print(f"User ID: {request.user.id} Request Type: getItems")
-    data = getItems()
-    return JsonResponse(data)
 
+from django.views.decorators.csrf import csrf_exempt
+@csrf_exempt
 def get_directions(request):
-    if request.method == 'POST':
-        received_data = request.POST.get('msg')
-        print(f"User ID: {request.user.id} Request Type: getDirections")
-        print(f"Received List: {received_data}")
-        data = getDirections(received_data)
+    if request.method == 'GET':
+        received_data = request.GET.get('msg')
+        if received_data:
+            print(f"User ID: {request.user.id} Request Type: getDirections")
+            print(f"Received List: {received_data}")
+            received_data=json.loads(received_data)
+            data = getDirections(received_data["msg"])
 
-        # Save received_data to the database
-        user = request.user
-        received_list = ReceivedList.objects.create(user=user)
-        for item_name in received_data:
-            item, created = Item.objects.get_or_create(name=item_name)
-            received_list.items.add(item)
+            
 
-        return JsonResponse(data)
+            return JsonResponse(data)
+        else:
+            return JsonResponse({"error": "msg parameter missing"})
     else:
         return JsonResponse({"error": "Invalid Request"})
 

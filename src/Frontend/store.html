@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .navbar {
+            background-color: #333;
+            color: white;
+            text-align: left;
+            padding: 10px 0;
+            width: 100%;
+        }
+        
+        .navbar ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .navbar ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+        
+        .navbar ul li:last-child {
+            margin-right: 0;
+        }
+        
+        .navbar ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+        .logo {
+            width: 40px; /* Adjust the width of the logo as needed */
+            height: auto;
+            vertical-align: middle;
+            margin-right: 10px; /* Optional: Add margin to the right of the logo for spacing */
+            margin-left: 10px;
+            }
+
+        #welcome {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+
+        #inputBox {
+            margin-bottom: 10px;
+        }
+
+        #button1 {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+
+        #content {
+            display: flex;
+            width: 100%;
+            margin-top: 50px;
+        }
+
+        #left {
+            width: 75%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        #left img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        #right {
+            width: 25%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        #getDirections {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        .checklist {
+            width: 45%;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .dropdown-container {
+            position: relative;
+            width: 200px;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 5px;
+        }
+
+        .dropdown {
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: none;
+            position: absolute;
+            background-color: #fff;
+        }
+
+        .option {
+            padding: 5px;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <ul>
+            <li><img src="logo-social.png" class="logo"></li>
+            <li><a href="#">Route</a></li>
+            <li><a href="#">Find Me</a></li>
+            <li><a href="#">Item List</a></li>
+        </ul>
+    </div>
+
+    <div id="welcome">
+        <input type="text" id="inputBox" placeholder="Enter Value">
+        <button id="button1">Proceed to Store</button>
+    </div>
+
+    <div id="content" style="display:none;">
+        
+        <div id="left">
+            <div class="image-container">
+                <h2>Store Preview</h2>
+                <img id="mapImage" src="" alt="Store Map Placeholder">
+            </div>
+            
+        </div>
+        <div id="right">
+            <div class="checklist">
+            <div class="dropdown-container">
+                <input type="text" id="searchInput" class="search-box" placeholder="Search...">
+                <div class="dropdown" id="dropdown">
+                </div>
+                <div class="selected-items" id="selectedItems">
+                </div>
+                <br>
+            </div>
+            <button id="getDirections">Get Directions</button>
+        </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('button1').addEventListener('click', function() {
+            var add = document.getElementById('inputBox').value;
+            if (add) {
+                // Clear the welcome div
+                document.getElementById('welcome').innerHTML = '';
+
+                // Show the content div
+                document.getElementById('content').style.display = 'flex';
+
+                // Fetch JSON from backend APIs
+                fetch('http://localhost:8000/api/getMap/')
+                    .then(response => response.json())
+                    .then(data => {
+                        //console.log('Data from the API:', data);
+                        data=data['msg']
+                        // Decode and display the image
+                        var imageElement = document.getElementById('mapImage');
+                        imageElement.src = 'data:image/png;base64,' + data;
+                    });
+    
+            }
+        });
+    </script>
+    <script>
+        const dropdown = document.getElementById("dropdown");
+        const searchInput = document.getElementById("searchInput");
+        const selectedItems = document.getElementById("selectedItems");
+        const selectedItemsList = [];
+        const saveButton = document.getElementById("saveButton");
+        const add="";
+
+        fetch('http://127.0.0.1:8000/api/getMetadata/')
+        .then(response => response.json())
+                    .then(data => {
+                        console.log('Data from the API:', data);  
+                        const items = data['itemList'];
+                    
+
+        
+        // /console.log(items)
+            // Create the dropdown options
+        items.forEach(item => {
+            const option = document.createElement("div");
+            option.className = "option";
+            //option.textContent = item;
+            option.innerHTML = `<input type="checkbox" class="checkbox" value="${item}"> ${item}`;
+            dropdown.appendChild(option);
+            });
+        searchInput.addEventListener("focus", filterOptions);
+        searchInput.addEventListener("input", filterOptions);
+
+        function filterOptions() {
+            const searchValue = searchInput.value.toLowerCase();
+            const options = document.querySelectorAll(".option");
+
+            options.forEach(option => {
+                const text = option.textContent.toLowerCase();
+                if (text.includes(searchValue)) {
+                    option.style.display = "block";
+                } else {
+                    option.style.display = "none";
+                }
+            });
+
+            dropdown.style.display = "block";
+        }
+
+        // Handle click events on the options
+        dropdown.addEventListener("click", event => {
+            if (event.target.classList.contains("option")) {
+                searchInput.value = event.target.textContent;
+                dropdown.style.display = "none";
+            }
+        });
+        dropdown.addEventListener("change", updateSelectedItems);
+        //console.log(selectedItemsList)
+        function updateSelectedItems() {
+            selectedItemsList.length = 0; // Clear the selected items list
+            const checkboxes = document.querySelectorAll(".checkbox:checked");
+
+            checkboxes.forEach((checkbox) => {
+                const label = checkbox.value;
+                selectedItemsList.push(label);
+            });
+            selectedItems.innerHTML = ""; // Clear the list
+            itemNumber = 1;
+            // Update the displayed selected items
+            //selectedItems.textContent = "Items selected: " +  selectedItemsList.join(', ');
+            selectedItemsList.forEach((item) => {
+                const listItem = document.createElement("li");
+                listItem.textContent = `${itemNumber}. ${item}`;
+                selectedItems.appendChild(listItem);
+                itemNumber++;
+            });
+        }
+        });
+    </script>
+    <script>
+        document.getElementById('getDirections').addEventListener('click', function() {
+            console.log(selectedItemsList)
+            // Send itemList to the backend for further processing
+            // Construct the URL with the 'msg' parameter
+            var jsonData = JSON.stringify({ msg: selectedItemsList });
+
+            fetch('http://127.0.0.1:8000/api/getDirections/?' + new URLSearchParams({msg: jsonData}))
+            .then(response => response.json())
+            .then(data => {
+            // Handle the response as needed
+            alert(JSON.stringify(data));
+            })
+            .catch(error => {
+            console.error('Error:', error);
+            });});
+    </script>
+</body>
+</html>
