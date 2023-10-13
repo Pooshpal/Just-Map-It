@@ -6,6 +6,7 @@
     <title>Store Page</title>
     <link rel="stylesheet" href="store.css">
 </head>
+
 <body>
     <div class="navbar">
         <ul>
@@ -46,6 +47,7 @@
     </div>
     <script>
         var add = 'http://127.0.0.1:8000'
+        //var add = 'http://192.168.0.6:8000'
         document.getElementById('button1').addEventListener('click', function() {
             //add = document.getElementById('inputBox').value;
             // /console.log(add)
@@ -81,19 +83,21 @@
         .then(response => response.json())
                     .then(data => {
                         //console.log('Data from the API:', data);  
-                        const items = data['itemList'];
+                        const items = data['available_items'];
                     
 
-        
-        // /console.log(items)
             // Create the dropdown options
-        items.forEach(item => {
+        for (const item in items) {
             const option = document.createElement("div");
             option.className = "option";
-            //option.textContent = item;
-            option.innerHTML = `<input type="checkbox" class="checkbox" value="${item}"> ${item}`;
+
+            // Check if the value is 0, and apply styles and disable checkbox
+            if (items[item] === 0) {
+                option.className = "red";
+            }
+            option.innerHTML = `<input type="checkbox" class="checkbox" value="${item}" ${items[item] === 0 ? 'disabled' : ''}> ${item}`;
             dropdown.appendChild(option);
-            });
+        } 
         searchInput.addEventListener("focus", filterOptions);
         searchInput.addEventListener("input", filterOptions);
 
@@ -142,6 +146,13 @@
             });
         }
         });
+        // Close the dropdown when clicking outside of it
+        document.addEventListener("click", event => {
+            if (event.target !== searchInput) {
+                dropdown.style.display = "none";
+            }
+        });
+
         document.getElementById('getDirections').addEventListener('click', function() {
             console.log(selectedItemsList)
             // Send itemList to the backend for further processing

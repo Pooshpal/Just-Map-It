@@ -129,4 +129,9 @@ select {
 .option {
     padding: 5px;
     cursor: pointer;
+    color: green;
+}
+.red{
+    padding: 5px;
+    color: red;
 }
