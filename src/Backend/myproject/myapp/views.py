@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from backend import getMap, getMetadata, getDirections, getImage
+from backend import getMap, getMetadata, getDirections, getImage, getQR
 from .models import Item, ReceivedList
 import json
 from django.contrib.auth.models import User
@@ -79,3 +79,23 @@ def get_image(request):
         return JsonResponse({"error": "Invalid Request"})
     
 #save_record(["apple"],"pooshpal")0
+
+@csrf_exempt
+def get_qr(request):
+    if request.method == 'POST':
+        received_data = json.loads(request.body)
+        print("Success")
+        if received_data:
+            print(f"User ID: {request.user.id} Request Type: getQR")
+            print(f"Received image!")
+            data = {}
+            temp1,temp2 = getQR(received_data["msg"])
+            data["info"]=temp1
+
+            data["image"]=temp2
+            
+            return JsonResponse({"msg":data })
+        else:
+            return JsonResponse({"error": "msg parameter missing"})
+    else:
+        return JsonResponse({"error": "Invalid Request"})

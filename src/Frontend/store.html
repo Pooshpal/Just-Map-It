@@ -42,6 +42,8 @@
                 <button id="getDirections">Get Directions</button>
                 <button id="startNavigation" style="display:none;">Start Navigation</button>
                 <button id="exitNavigation" style="display:none;">Exit Navigation</button>
+                
+                <button id="lost" style="display:block;">Help I'm Lost</button>
             </div>
         </div>
     </div>
@@ -130,133 +132,211 @@
                         itemNumber++;
                     });
                     if(selectedItemsList != []){
-                    document.getElementById('getDirections').style.display = 'block';}
-                }
-            });
-            document.addEventListener("click", event => {if (event.target !== searchInput) {dropdown.style.display = "none";}});
-            if(selectedItemsList == []){
+                        document.getElementById('getDirections').style.display = 'block';}
+                    }
+                });
+                document.addEventListener("click", event => {if (event.target !== searchInput) {dropdown.style.display = "none";}});
+                if(selectedItemsList == []){
                     document.getElementById('getDirections').style.display = 'none';}
-
-            
-            
-        });
-        
-        
-        // Get Direction
-        document.getElementById('getDirections').addEventListener('click', function() {
-            // Fetch directions data from backend
-            var jsonData = JSON.stringify({ msg: selectedItemsList });
-            fetch(add+'/api/getDirections/?' + new URLSearchParams({msg: jsonData}))
-            .then(response => response.json())
-            .then(data => {
-                directionData = data["path"]
-                var imageElement = document.getElementById('mapImage');
-                imageElement.src = 'data:image/png;base64,' + data["image"];
-                document.getElementById('startNavigation').style.display = 'block';
-                document.getElementById('exitNavigation').style.display = 'block';
-                document.getElementById('getDirections').style.display = 'none';
-            });
-        });
-        
-        //Exit Navigation
-        document.getElementById('exitNavigation').addEventListener('click', function() {
-            counterFlag = false;
-            counter = 0;
-
-            // Image
-            var imageElement = document.getElementById('mapImage');
-            imageElement.src = 'data:image/png;base64,' + storeImage;
-            
-            //Item List
-            const items = storeMetadata['available_items'];
-            for (const item in items) 
-            {
-                const option = document.createElement("div");
-                option.className = "option";
-                if (items[item] === 0) {option.className = "red";}
-                option.innerHTML = `<input type="checkbox" class="checkbox" value="${item}" ${items[item] === 0 ? 'disabled' : ''}> ${item}`;
-                dropdown.appendChild(option);
-            } 
-            searchInput.addEventListener("focus", filterOptions);
-            searchInput.addEventListener("input", filterOptions);
-            function filterOptions() 
-            {
-                const searchValue = searchInput.value.toLowerCase();
-                const options = document.querySelectorAll(".option");
-                options.forEach(option => 
-                {
-                    const text = option.textContent.toLowerCase();
-                    if (text.includes(searchValue)) {option.style.display = "block";} 
-                    else {option.style.display = "none";}
+                    
+                    
+                    
                 });
-                dropdown.style.display = "block";
-            }
-            dropdown.addEventListener("click", event => 
-            {
-                if (event.target.classList.contains("option")) 
-                {
-                    searchInput.value = event.target.textContent;
-                    dropdown.style.display = "none";
-                }
-            });
-            dropdown.addEventListener("change", updateSelectedItems);
-            function updateSelectedItems() 
-            {
-                selectedItemsList.length = 0; // Clear the selected items list
-                const checkboxes = document.querySelectorAll(".checkbox:checked");
-                checkboxes.forEach((checkbox) => 
-                {
-                    const label = checkbox.value;
-                    selectedItemsList.push(label);
-                });
-                selectedItems.innerHTML = ""; 
-                itemNumber = 1;
-                selectedItemsList.forEach((item) => {
-                    const listItem = document.createElement("li");
-                    listItem.textContent = `${itemNumber}. ${item}`;
-                    selectedItems.appendChild(listItem);
-                    itemNumber++;
-                });
-            }
-            document.addEventListener("click", event => {if (event.target !== searchInput) {dropdown.style.display = "none";}});
-            document.getElementById('dropdown_main').style.display = 'block';
-            document.getElementById('items').innerHTML = '';
-            document.getElementById('startNavigation').style.display = 'none';
-            document.getElementById('exitNavigation').style.display = 'none';
-            document.getElementById('getDirections').style.display = 'block';
-        });
-
-
-        
-        // Start Navigation
-        document.getElementById('startNavigation').addEventListener('click', function() {
-            // Fetch directions data from backend
-            var temp = Object.values(directionData)[counter]
-            var jsonData = JSON.stringify({ msg: temp["path"] });
-            
-            document.getElementById('startNavigation').innerHTML = 'Next Stop';
-            document.getElementById('startNavigation').style.display = 'block';
-                document.getElementById('exitNavigation').style.display = 'block';
-                document.getElementById('getDirections').style.display = 'none';
-                document.getElementById('dropdown_main').style.display = 'none';
-                document.getElementById('items').innerHTML = temp["item"];
-            fetch(add+'/api/getVisualization/?' + new URLSearchParams({msg: jsonData}))
-            .then(response => response.json())
-            .then(data => {
-                var imageElement = document.getElementById('mapImage');
-                imageElement.src = 'data:image/png;base64,' + data['msg'];
                 
-            });    
-
-
+                //Lost
+                document.getElementById('lost').addEventListener('click', function() {
+                    var inputElement = document.createElement('input');
+                    inputElement.type = 'file';
+                    
+                    // Set up event listener for when a file is selected
+                    inputElement.addEventListener('change', function() {
+                        var file = inputElement.files[0]; // Get the selected file
+                        
+                        // Check if a file was selected
+                        if (file) {
+                            var reader = new FileReader();
+                            
+                            // Set up event listener for when the file is loaded
+                            reader.onload = function(event) {
+                                var base64Image = event.target.result.split(',')[1]; // Get base64 encoded image data
+                                
+                                // Send the base64Image to your API
+                                fetch(add + '/api/get_qr/', {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                    },
+                                    body: JSON.stringify({ "msg": base64Image }), // Send base64 image data
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    // Handle the response from the backend as needed
+                                    data=data["msg"]
+                                    alert(JSON.stringify(data["info"]));
+                                    // Assuming `temp` contains the base64 encoded image data
+                                    temp = 'data:image/png;base64,' + data['image']; // Replace with your actual base64 image data
+                                    
+                                    // Create a new image element
+                                    var imgElement = document.createElement('img');
+                                    imgElement.src = temp; // Set the source of the image to the base64 data
+                                    
+                                    // Create a new dialog element
+                                    var dialogElement = document.createElement('dialog');
+                                    dialogElement.appendChild(imgElement); // Add the image to the dialog
+                                    
+                                    // Create a button to close the dialog
+                                    var closeButton = document.createElement('button');
+                                    closeButton.textContent = 'Close';
+                                    closeButton.addEventListener('click', function() {
+                                        dialogElement.close();
+                                    });
+                                    
+                                    // Add the close button to the dialog
+                                    dialogElement.appendChild(closeButton);
+                                    
+                                    // Append the dialog to the document body
+                                    document.body.appendChild(dialogElement);
+                                    
+                                    // Open the dialog
+                                    dialogElement.showModal();
+                                    
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                });
+                            }
+                            
+                            // Read the file as a data URL
+                            reader.readAsDataURL(file);
+                        }
+                        
+                        // Remove the input element from the document
+                        inputElement.remove();
+                    });
+                    
+                    // Trigger a click event on the input element to open the file dialog
+                    inputElement.click();
+                });
                 
-            if (Object.keys(directionData)[counter] == "billing"){
-                document.getElementById('startNavigation').innerHTML = 'Start Navigation';
-                document.getElementById('startNavigation').style.display = 'none';
-            }
-            counter=counter+1;
-            
-        });
-    </script>
-</body>
-</html>
+                
+                
+                
+                // Get Direction
+                document.getElementById('getDirections').addEventListener('click', function() {
+                    // Fetch directions data from backend
+                    var jsonData = JSON.stringify({ msg: selectedItemsList });
+                    fetch(add+'/api/getDirections/?' + new URLSearchParams({msg: jsonData}))
+                    .then(response => response.json())
+                    .then(data => {
+                        directionData = data["path"]
+                        var imageElement = document.getElementById('mapImage');
+                        imageElement.src = 'data:image/png;base64,' + data["image"];
+                        document.getElementById('startNavigation').style.display = 'block';
+                        document.getElementById('exitNavigation').style.display = 'block';
+                        document.getElementById('getDirections').style.display = 'none';
+                    });
+                });
+                
+                //Exit Navigation
+                document.getElementById('exitNavigation').addEventListener('click', function() {
+                    counterFlag = false;
+                    counter = 0;
+                    
+                    // Image
+                    var imageElement = document.getElementById('mapImage');
+                    imageElement.src = 'data:image/png;base64,' + storeImage;
+                    
+                    //Item List
+                    const items = storeMetadata['available_items'];
+                    for (const item in items) 
+                    {
+                        const option = document.createElement("div");
+                        option.className = "option";
+                        if (items[item] === 0) {option.className = "red";}
+                        option.innerHTML = `<input type="checkbox" class="checkbox" value="${item}" ${items[item] === 0 ? 'disabled' : ''}> ${item}`;
+                        dropdown.appendChild(option);
+                    } 
+                    searchInput.addEventListener("focus", filterOptions);
+                    searchInput.addEventListener("input", filterOptions);
+                    function filterOptions() 
+                    {
+                        const searchValue = searchInput.value.toLowerCase();
+                        const options = document.querySelectorAll(".option");
+                        options.forEach(option => 
+                        {
+                            const text = option.textContent.toLowerCase();
+                            if (text.includes(searchValue)) {option.style.display = "block";} 
+                            else {option.style.display = "none";}
+                        });
+                        dropdown.style.display = "block";
+                    }
+                    dropdown.addEventListener("click", event => 
+                    {
+                        if (event.target.classList.contains("option")) 
+                        {
+                            searchInput.value = event.target.textContent;
+                            dropdown.style.display = "none";
+                        }
+                    });
+                    dropdown.addEventListener("change", updateSelectedItems);
+                    function updateSelectedItems() 
+                    {
+                        selectedItemsList.length = 0; // Clear the selected items list
+                        const checkboxes = document.querySelectorAll(".checkbox:checked");
+                        checkboxes.forEach((checkbox) => 
+                        {
+                            const label = checkbox.value;
+                            selectedItemsList.push(label);
+                        });
+                        selectedItems.innerHTML = ""; 
+                        itemNumber = 1;
+                        selectedItemsList.forEach((item) => {
+                            const listItem = document.createElement("li");
+                            listItem.textContent = `${itemNumber}. ${item}`;
+                            selectedItems.appendChild(listItem);
+                            itemNumber++;
+                        });
+                    }
+                    document.addEventListener("click", event => {if (event.target !== searchInput) {dropdown.style.display = "none";}});
+                    document.getElementById('dropdown_main').style.display = 'block';
+                    document.getElementById('items').innerHTML = '';
+                    document.getElementById('startNavigation').style.display = 'none';
+                    document.getElementById('exitNavigation').style.display = 'none';
+                    document.getElementById('getDirections').style.display = 'block';
+                });
+                
+                
+                
+                // Start Navigation
+                document.getElementById('startNavigation').addEventListener('click', function() {
+                    // Fetch directions data from backend
+                    var temp = Object.values(directionData)[counter]
+                    var jsonData = JSON.stringify({ msg: temp["path"] });
+                    
+                    document.getElementById('startNavigation').innerHTML = 'Next Stop';
+                    document.getElementById('startNavigation').style.display = 'block';
+                    document.getElementById('exitNavigation').style.display = 'block';
+                    document.getElementById('getDirections').style.display = 'none';
+                    document.getElementById('dropdown_main').style.display = 'none';
+                    document.getElementById('items').innerHTML = temp["item"];
+                    fetch(add+'/api/getVisualization/?' + new URLSearchParams({msg: jsonData}))
+                    .then(response => response.json())
+                    .then(data => {
+                        var imageElement = document.getElementById('mapImage');
+                        imageElement.src = 'data:image/png;base64,' + data['msg'];
+                        
+                    });    
+                    
+                    
+                    
+                    if (Object.keys(directionData)[counter] == "billing"){
+                        document.getElementById('startNavigation').innerHTML = 'Start Navigation';
+                        document.getElementById('startNavigation').style.display = 'none';
+                    }
+                    counter=counter+1;
+                    
+                });
+            </script>
+        </body>
+        </html>
+        
