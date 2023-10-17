@@ -2,6 +2,8 @@ import math
 import numpy as np 
 import heapq
 import json
+import cv2
+import base64
 def getDirection(list_items):   
     with open('./assets/metadata.json', 'r') as f:
         data = json.load(f)
@@ -108,7 +110,7 @@ def getDirection(list_items):
         list1 = []
         for value in section_list[sect[i]]:
             for j in list_items:
-                if j in value:
+                if j==value:
                     item_list.append(j)
         info["item"] = item_list
         list1.append(access_points[i])
@@ -131,8 +133,22 @@ def getDirection(list_items):
     for k in range(len(path1)):
             path1[k] = coord_dict.get(str(path1[k]))
     path1.append(coord_dict.get('90'))
-    my_dict["billing"] = {"item": "None", "path":path1}   
+    my_dict["billing"] = {"item": "Billing", "path":path1} 
+    
 
-    return my_dict
+    def make_line(path,img):
+        for i in range(len(path)-1):
+            cv2.line(img,(int(path[i][0]),int(path[i][1])),(int(path[i+1][0]),int(path[i+1][1])),(0, 0, 255), 2)
+        return img
+    
+    img = cv2.imread('./assets/floor_blueprint.png')
+    for i in my_dict.values():
+        img=make_line(i['path'],img)
+    #cv2.imwrite("./assets/full_path.png",img)
+    _, encoded_image = cv2.imencode('.png', img)
+    base64_image = base64.b64encode(encoded_image.tobytes()).decode()
+    return my_dict,base64_image
 
 
+
+# /print(getDirection(['Apples','Dates']))

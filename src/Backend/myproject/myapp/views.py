@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from backend import getMap, getMetadata, getDirections
+from backend import getMap, getMetadata, getDirections, getImage
 from .models import Item, ReceivedList
 import json
 from django.contrib.auth.models import User
@@ -14,7 +14,7 @@ def get_metadata(request):
     data = getMetadata()
     return JsonResponse(data)
 
-
+from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 @csrf_exempt
 def get_directions(request):
@@ -23,12 +23,13 @@ def get_directions(request):
         if received_data:
             print(f"User ID: {request.user.id} Request Type: getDirections")
             print(f"Received List: {received_data}")
-            received_data=json.loads(received_data)
+            received_data = json.loads(received_data)
 
             print(received_data,request.user)
             save_record(received_data,request.user)
             
-            data = getDirections(received_data["msg"])
+            path,img = getDirections(received_data["msg"])
+            data = {"path":path,"image":img}
             return JsonResponse(data)
         else:
             return JsonResponse({"error": "msg parameter missing"})
@@ -61,5 +62,20 @@ def get_all_records(request):
         print(f"An error occurred: {str(e)}")
         return JsonResponse({"error": "An error occurred"})
     
+def get_image(request):
+    if request.method == 'GET':
+        received_data = request.GET.get('msg')
+        if received_data:
+            print(f"User ID: {request.user.id} Request Type: getImage")
+            received_data = json.loads(received_data)
+            print(f"Received List: {received_data}")
 
+            print(received_data['msg'],request.user)
+            data = getImage(received_data['msg'])
+            return JsonResponse(data)
+        else:
+            return JsonResponse({"error": "msg parameter missing"})
+    else:
+        return JsonResponse({"error": "Invalid Request"})
+    
 #save_record(["apple"],"pooshpal")0
