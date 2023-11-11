@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="C:\Users\prart\Desktop\styles.css" />
     <title>Just Map It</title>
   </head>
-  <body class="vh-100 overflow-hidden" style="background: linear-gradient(135deg, rgb(0, 22, 22), #275b8e);">
+  <body class="vh-1000 " style="background: linear-gradient(135deg, rgb(0, 22, 22), #275b8e);">
     <nav class="navbar navbar-expand-lg navbar-dark bg-transparent" style="padding-top: 25px;">
         <div class="container">
           <div id="datetime" class="datetime-display"></div>
@@ -92,9 +92,7 @@
     
     <div id="content" style="display:none;">
         <div id="left" class="map-container">
-            <div class="image-container">
                 <img id="mapImage" src="" alt="Store Map Placeholder" class="scrollable">
-            </div>
         </div>
         <div id="right" style="padding-left:5px;">
             <div class="checklist">
@@ -155,7 +153,7 @@
 
         setInterval(updateDateTime, 1000);
         updateDateTime();
-    </script>
+    </script>   
     <script>
         var add = 'http://127.0.0.1:8000'
         var storeImage = null;
@@ -546,7 +544,9 @@
                     // Fetch directions data from backend
                     var temp = Object.values(directionData)[counter]
                     var jsonData = JSON.stringify({ msg: temp["path"] });
-                    
+                    var checklistDiv = document.getElementById('selectedItems');
+                    // Set the display property to 'none' to hide it
+                    checklistDiv.style.display = 'none';
                     document.getElementById('startNavigation').innerHTML = 'Next Stop';
                     document.getElementById('startNavigation').style.display = 'block';
                     document.getElementById('exitNavigation').style.display = 'block';
@@ -721,6 +721,20 @@
                     }
                 });
               </script>
+              <script>
+                // This function will be called when the "Start Navigation" button is clicked
+                function hideChecklist() {
+                    // Get the checklist div
+                    var checklistDiv = document.getElementById('checklist');
+            
+                    // Set the display property to 'none' to hide it
+                    checklistDiv.style.display = 'none';
+                }
+            
+                // Add event listener to the "Start Navigation" button
+                document.getElementById('startNavigation').addEventListener('click', hideChecklist);
+            </script>
+            
             
   </body>
 </html>

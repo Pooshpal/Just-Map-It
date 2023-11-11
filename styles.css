@@ -3,11 +3,10 @@
     background-color: #333;
     color: white;
     text-align: center;
-    position: fixed; /* Or 'fixed' if you want it always visible at the bottom */
+    position: relative; /* Or 'fixed' if you want it always visible at the bottom */
     bottom: 0;
     width: 100%;
 }
-
 
 @media (max-width: 768px) {
     #storemsg, #storeName {
@@ -95,11 +94,7 @@ button, input[type="text"] {
         backdrop-filter: blur(10px);
     }
 }
-body, html {
-    overflow-y: scroll; /* or overflow-y: auto; for vertical scrolling */
-    overflow-x: scroll;
-    height:scroll;
-}
+
  
 /* CSS for chatbot button with a "find me" icon */
 
