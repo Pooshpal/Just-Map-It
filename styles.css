@@ -1,3 +1,26 @@
+.footer {
+    padding: 20px 0;
+    background-color: #333;
+    color: white;
+    text-align: center;
+    position: fixed; /* Or 'fixed' if you want it always visible at the bottom */
+    bottom: 0;
+    width: 100%;
+}
+
+
+@media (max-width: 768px) {
+    #storemsg, #storeName {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 576px) {
+    #storemsg, #storeName {
+        font-size: 12px;
+    }
+}
+
 /* Overall layout */
 #content {
     display: flex;

@@ -16,6 +16,8 @@
           <div id="datetime" class="datetime-display"></div>
           <img src="logo.png" height="2px" width="60px" style="justify-self: flex-start;padding: left -4px;">
           <!--<a class="navbar-brand fs-4 mt-2" href="#">Just Map It</a>-->
+          <span id="storemsg" class="navbar-brand fs-5 mt-3" style="padding-left:100px;"> Welcome to,</span>
+          <span id="storeName" class="navbar-brand fs-5 mt-3" style="padding-left: 0px;"><!-- Store Name will go here --></span>
           <button class="navbar-toggler shadow-none border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -24,7 +26,7 @@
               <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Just Map It</h5>
               <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
-            <div class="offcanvas-body" style="padding-top: 8px; padding-right:76px;">
+            <div class="offcanvas-body" style="padding-top: 11px; padding-right:76px;">
               <ul class="navbar-nav justify-content-center fs-5 flex-grow-1 pe-3">
                 <li class="nav-item">
                   <a class="nav-link active" aria-current="page" href="#">Route</a>
@@ -112,6 +114,36 @@
             </div>
         </div>
     </div>
+    <footer class="text-white bg-dark">
+        <div class="container py-4">
+            <div class="row">
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <h5>About Us</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white">Our Story</a></li>
+                        <li><a href="#" class="text-white">Meet the Team</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <h5>Contact Us</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white">Email Us</a></li>
+                        <li><a href="#" class="text-white">Support Center</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <h5>Follow Us</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white">Facebook</a></li>
+                        <li><a href="#" class="text-white">Twitter</a></li>
+                        <li><a href="#" class="text-white">Instagram</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    
     <br>
     <br>
     <script>
@@ -136,6 +168,42 @@
         var counterFlag = false;
         var directionData = null;
         var counter = 0;
+        document.addEventListener('DOMContentLoaded', function() {
+            // Replace 'metadataUrl' with the actual URL where your metadata is stored
+            var metadataUrl = 'http://127.0.0.1:8000/api/getMetadata/'; 
+        
+            // Function to fetch metadata
+            function fetchMetadata(url) {
+                fetch(url)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        setStoreName(data);
+                    })
+                    .catch(error => {
+                        console.error('Fetch metadata failed:', error);
+                    });
+            }
+        
+            // Function to set the store name
+            function setStoreName(metadata) {
+                var storeNameElement = document.getElementById('storeName');
+                if (storeNameElement && metadata.storeName) {
+                    storeNameElement.textContent = metadata.storeName;
+                }
+            }
+        
+            // Call the fetchMetadata function to load and set the store name
+            fetchMetadata(metadataUrl);
+        
+            // ... other existing script code ...
+        
+        });
+        
         document.getElementById('button1').addEventListener('click', function() {
             
             document.getElementById('welcome').innerHTML = '';
@@ -609,7 +677,7 @@
                     //console.log(jsonImage);
                     screenshotDataUrl = screenshotDataUrl.split(",")[1];
                     console.log(screenshotDataUrl)
-                    fetch(add+'/api/getQR/' ,{
+                    fetch(add+'/api/get_qr/' ,{
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
