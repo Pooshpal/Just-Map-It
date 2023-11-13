@@ -89,10 +89,15 @@ def get_qr(request):
             print(f"User ID: {request.user.id} Request Type: getQR")
             print(f"Received image!")
             data = {}
-            temp1,temp2 = getQR(received_data["msg"])
-            data["info"]=temp1
-
-            data["image"]=temp2
+            #temp1,temp2 = getQR(received_data["msg"])
+            #data["info"]=temp1
+            #data["image"]=temp2
+            temp = getQR(received_data["msg"])
+            if isinstance(temp, tuple):
+                data["info"] = temp[0]
+                data["image"]=temp[1]
+            else:
+                data["info"] = temp
             
             return JsonResponse({"msg":data })
         else:
