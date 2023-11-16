@@ -29,6 +29,7 @@ def getImage(path:list):
     base64_image = base64.b64encode(encoded_image.tobytes()).decode()
     return {"msg":base64_image}
 
+
 import numpy as np
 from pyzbar.pyzbar import decode
 def getQR(base64__in_image):

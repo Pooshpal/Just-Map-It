@@ -104,3 +104,4 @@ def get_qr(request):
             return JsonResponse({"error": "msg parameter missing"})
     else:
         return JsonResponse({"error": "Invalid Request"})
+
