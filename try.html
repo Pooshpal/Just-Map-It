@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="C:\Users\prart\Desktop\styles.css" />
     <title>Just Map It</title>
   </head>
-  <body class="vh-1000 " style="background: linear-gradient(135deg, rgb(0, 22, 22), #275b8e);">
+  <body class="vh-600" style="background: linear-gradient(135deg, rgb(0, 22, 22), #275b8e);">
     <nav class="navbar navbar-expand-lg navbar-dark bg-transparent" style="padding-top: 25px;">
         <div class="container">
           <div id="datetime" class="datetime-display"></div>
@@ -32,10 +32,10 @@
                   <a class="nav-link active" aria-current="page" href="#">Route</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#">Item List</a>
+                  <a class="nav-link" href="#" id="itemListButton">Item List</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Contact Us</a>
+                    <a class="nav-link" href="#footer1">Contact Us</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">My cart</a>
@@ -112,30 +112,27 @@
             </div>
         </div>
     </div>
-    <footer class="text-white bg-dark">
-        <div class="container py-4">
+    <footer class="text-white bg-dark" id="footer1">
+        <div class="container py-2">
             <div class="row">
-                <div class="col-md-4 mb-3 mb-md-0">
-                    <h5>About Us</h5>
+                <div class="col-md-4 mb-3 mb-md-0 fs-5">
+                    <br>
+                    <h2>Contact Us: +91 889887456</h2>
                     <ul class="list-unstyled">
-                        <li><a href="#" class="text-white">Our Story</a></li>
-                        <li><a href="#" class="text-white">Meet the Team</a></li>
+                        <li><span>Email:</span><a href="#" class="text-white fs-5">justmapit@gmail.com</a></li>
+                        <li><a href="feedback.html" class="text-white fs-5">Support Center</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-3 mb-md-0 fs-5">
+                    <br>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white fs-5"><img src="meta.png" height="20px" width="20px">justmapitstores</a></li>
+                        <li><a href="#" class="text-white fs-5"><img src=insta.png height="20px" width="20px"></a>justmapit</li>
+                        <li><a href="#" class="text-white fs-5"><img src=twitter.png height="20px" width="20px">justmapit</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4 mb-3 mb-md-0">
-                    <h5>Contact Us</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#" class="text-white">Email Us</a></li>
-                        <li><a href="#" class="text-white">Support Center</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-4 mb-3 mb-md-0">
-                    <h5>Follow Us</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#" class="text-white">Facebook</a></li>
-                        <li><a href="#" class="text-white">Twitter</a></li>
-                        <li><a href="#" class="text-white">Instagram</a></li>
-                    </ul>
+                    <img src="banner.png">
                 </div>
             </div>
         </div>
@@ -186,7 +183,6 @@
                         console.error('Fetch metadata failed:', error);
                     });
             }
-        
             // Function to set the store name
             function setStoreName(metadata) {
                 var storeNameElement = document.getElementById('storeName');
