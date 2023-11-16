@@ -64,7 +64,7 @@ def getDirection(list_items):
     def generate_path1(access_points,start,end):
         matrix = adjmat(coord_dict,connections)
         path = []
-        access_points.sort()
+        #access_points.sort()
         for i in range(len(access_points)-1):
             temp_path = shortest_path1(matrix,access_points[i]-1,access_points[i+1]-1)
             for i in temp_path:
@@ -102,7 +102,7 @@ def getDirection(list_items):
     for i in section:
         access_points.append(access_nodes[i])
     unique_list = list(set(access_points))
-    #access_points = func_sort(access_points)
+    access_points = func_sort(access_points)
     path1 = generate_path1(access_points,start=0,end=89)
     dest = []
     for i in path1:
