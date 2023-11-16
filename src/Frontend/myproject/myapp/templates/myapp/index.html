@@ -11,13 +11,14 @@
     <link rel="stylesheet" href="{% static 'myapp/styles.css' %}" />
     <title>Just Map It</title>
   </head>
-
-  <body class="vh-100" style="background: linear-gradient(135deg, rgb(0, 22, 22), #275b8e);">
+  <body class="vh-600" style="background: linear-gradient(135deg, rgb(0, 22, 22), #275b8e);">
     <nav class="navbar navbar-expand-lg navbar-dark bg-transparent" style="padding-top: 25px;">
         <div class="container">
           <div id="datetime" class="datetime-display"></div>
-          <img src="./logo.png" height="2px" width="60px" style="justify-self: flex-start;padding: left -4px;">
+          <img src="logo.png" height="2px" width="60px" style="justify-self: flex-start;padding: left -4px;">
           <!--<a class="navbar-brand fs-4 mt-2" href="#">Just Map It</a>-->
+          <span id="storemsg" class="navbar-brand fs-5 mt-3" style="padding-left:100px;"> Welcome to,</span>
+          <span id="storeName" class="navbar-brand fs-5 mt-3" style="padding-left: 0px;"><!-- Store Name will go here --></span>
           <button class="navbar-toggler shadow-none border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -26,16 +27,16 @@
               <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Just Map It</h5>
               <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
-            <div class="offcanvas-body" style="padding-top: 8px; padding-right:76px;">
+            <div class="offcanvas-body" style="padding-top: 11px; padding-right:76px;">
               <ul class="navbar-nav justify-content-center fs-5 flex-grow-1 pe-3">
                 <li class="nav-item">
                   <a class="nav-link active" aria-current="page" href="#">Route</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#">Item List</a>
+                  <a class="nav-link" href="#" id="itemListButton">Item List</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Contact Us</a>
+                    <a class="nav-link" href="#footer1">Contact Us</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">My cart</a>
@@ -92,9 +93,7 @@
     
     <div id="content" style="display:none;">
         <div id="left" class="map-container">
-            <div class="image-container">
                 <img id="mapImage" src="" alt="Store Map Placeholder" class="scrollable">
-            </div>
         </div>
         <div id="right" style="padding-left:5px;">
             <div class="checklist">
@@ -114,6 +113,33 @@
             </div>
         </div>
     </div>
+    <footer class="text-white bg-dark" id="footer1">
+        <div class="container py-2">
+            <div class="row">
+                <div class="col-md-4 mb-3 mb-md-0 fs-5">
+                    <br>
+                    <h2>Contact Us: +91 889887456</h2>
+                    <ul class="list-unstyled">
+                        <li><span>Email:</span><a href="#" class="text-white fs-5">justmapit@gmail.com</a></li>
+                        <li><a href="feedback.html" class="text-white fs-5">Support Center</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-3 mb-md-0 fs-5">
+                    <br>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white fs-5"><img src="meta.png" height="20px" width="20px">justmapitstores</a></li>
+                        <li><a href="#" class="text-white fs-5"><img src=insta.png height="20px" width="20px"></a>justmapit</li>
+                        <li><a href="#" class="text-white fs-5"><img src=twitter.png height="20px" width="20px">justmapit</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <img src="banner.png">
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    
     <br>
     <br>
     <script>
@@ -125,7 +151,7 @@
 
         setInterval(updateDateTime, 1000);
         updateDateTime();
-    </script>
+    </script>   
     <script>
         //var add = 'http://127.0.0.1:8000'
         var add = 'http://192.168.38.234:8000'
@@ -139,6 +165,41 @@
         var counterFlag = false;
         var directionData = null;
         var counter = 0;
+        document.addEventListener('DOMContentLoaded', function() {
+            // Replace 'metadataUrl' with the actual URL where your metadata is stored
+            var metadataUrl = 'http://127.0.0.1:8000/api/getMetadata/'; 
+        
+            // Function to fetch metadata
+            function fetchMetadata(url) {
+                fetch(url)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        setStoreName(data);
+                    })
+                    .catch(error => {
+                        console.error('Fetch metadata failed:', error);
+                    });
+            }
+            // Function to set the store name
+            function setStoreName(metadata) {
+                var storeNameElement = document.getElementById('storeName');
+                if (storeNameElement && metadata.storeName) {
+                    storeNameElement.textContent = metadata.storeName;
+                }
+            }
+        
+            // Call the fetchMetadata function to load and set the store name
+            fetchMetadata(metadataUrl);
+        
+            // ... other existing script code ...
+        
+        });
+        
         document.getElementById('button1').addEventListener('click', function() {
             
             document.getElementById('welcome').innerHTML = '';
@@ -146,31 +207,19 @@
             document.getElementById('getDirections').style.display = 'none';
             
             fetch(add+'/api/getMap/')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                data = data['msg'];
-                storeImage = data;
+            .then(response => response.json())
+            .then(data => 
+            {
+                data=data['msg']
+                storeImage = data
                 var imageElement = document.getElementById('mapImage');
                 imageElement.src = 'data:image/png;base64,' + data;
-            })
-            .catch(error => {
-                // Display an error popup
-                alert(`Error fetching map: ${error.message}`);
-            });
+            }); 
             
             fetch(add+'/api/getMetadata/')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
+            .then(response => response.json())
+            .then(data => 
+            {
                 storeMetadata = data;
                 const items = data['available_items'];
                 dropdown.innerHTML = ''; // Clear existing options
@@ -224,18 +273,12 @@
                     updateSelectedItemsDisplay();
                     document.getElementById('getDirections').style.display = selectedItemsList.length > 0 ? 'block' : 'none';
                 }
-            })
-            .catch(error => {
-                // Display an error popup
-                alert(`Error fetching items: ${error.message}`);
             });
-
             document.addEventListener("click", event => {
                 if (event.target !== searchInput) {
                     dropdown.style.display = "none";
                 }
             });
-
             document.getElementById('getDirections').style.display = selectedItemsList.length > 0 ? 'block' : 'none';
         });
 
@@ -397,23 +440,14 @@
                     // Fetch directions data from backend
                     var jsonData = JSON.stringify({ msg: selectedItemsList });
                     fetch(add+'/api/getDirections/?' + new URLSearchParams({msg: jsonData}))
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! Status: ${response.status}`);
-                        }
-                        return response.json();
-                    })
+                    .then(response => response.json())
                     .then(data => {
-                        directionData = data["path"];
+                        directionData = data["path"]
                         var imageElement = document.getElementById('mapImage');
                         imageElement.src = 'data:image/png;base64,' + data["image"];
                         document.getElementById('startNavigation').style.display = 'block';
                         document.getElementById('exitNavigation').style.display = 'block';
                         document.getElementById('getDirections').style.display = 'none';
-                    })
-                    .catch(error => {
-                        // Display an error popup
-                        alert(`Error fetching directions: ${error.message}`);
                     });
                 });
                 
@@ -508,7 +542,9 @@
                     // Fetch directions data from backend
                     var temp = Object.values(directionData)[counter]
                     var jsonData = JSON.stringify({ msg: temp["path"] });
-                    
+                    var checklistDiv = document.getElementById('selectedItems');
+                    // Set the display property to 'none' to hide it
+                    checklistDiv.style.display = 'none';
                     document.getElementById('startNavigation').innerHTML = 'Next Stop';
                     document.getElementById('startNavigation').style.display = 'block';
                     document.getElementById('exitNavigation').style.display = 'block';
@@ -683,6 +719,20 @@
                     }
                 });
               </script>
+              <script>
+                // This function will be called when the "Start Navigation" button is clicked
+                function hideChecklist() {
+                    // Get the checklist div
+                    var checklistDiv = document.getElementById('checklist');
+            
+                    // Set the display property to 'none' to hide it
+                    checklistDiv.style.display = 'none';
+                }
+            
+                // Add event listener to the "Start Navigation" button
+                document.getElementById('startNavigation').addEventListener('click', hideChecklist);
+            </script>
+            
             
   </body>
 </html>
