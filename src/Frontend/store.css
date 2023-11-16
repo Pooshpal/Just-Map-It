@@ -1,57 +1,196 @@
-body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.navbar {
+.footer {
+    padding-top: 200px;
     background-color: #333;
     color: white;
-    text-align: left;
-    padding: 10px 0;
+    text-align: center;
+    position: relative; /* Or 'fixed' if you want it always visible at the bottom */
+    bottom: 0;
     width: 100%;
 }
-
-.navbar ul {
-    list-style: none;
-    padding: 0;
+html {
+    scroll-behavior: smooth;
 }
 
-.navbar ul li {
-    display: inline;
-    margin-right: 20px;
+#items {
+    font-family: 'Arial', sans-serif; /* Use a fancy font of your choice */
+    color: #f7f6f7; /* Choose a fancy color */
+    font-size: 24px; /* Set a larger font size */
+    font-weight: bold; /* Make the font bold */
+    /* text-decoration: underline;  Underline the text */
+    /*text-shadow: 2px 2px #D5D8DC;  Add a shadow for a fancy effect */
 }
-
-.navbar ul li:last-child {
-    margin-right: 0;
-}
-
-.navbar ul li a {
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 18px;
-}
-
-.navbar a:hover {
-    background-color: #ddd;
-    color: black;
-}
-
-.logo {
-    width: 40px; /* Adjust the width of the logo as needed */
-    height: auto;
-    vertical-align: middle;
-    margin-right: 10px; /* Optional: Add margin to the right of the logo for spacing */
-    margin-left: 10px;
-}
-
-#welcome {
+/* Assuming your HTML structure has a div around the "Welcome to, [Store Name]" */
+.welcome-container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    margin-top: 50px;
+    justify-content: center;
+    white-space: nowrap; /* Prevents the text from wrapping */
+}
+
+#storemsg, #storeName {
+    font-size: 4vw; /* Adjust the size as needed */
+}
+
+/* Media queries to adjust font size on smaller screens */
+@media (max-width: 768px) {
+    #storemsg, #storeName {
+        font-size: 5vw;
+        text-align: center; /* Slightly larger since the screen is smaller */
+    }
+}
+
+@media (max-width: 480px) {
+    #storemsg, #storeName {
+        font-size: 6vw;
+        text-align: center; /* Even larger to accommodate very small screens */
+    }
+}
+
+
+/* Overall layout */
+#content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: start;
+    gap: 20px;
+    padding: 10px;
+}
+
+/* Left section */
+#left {
+    flex: 1;
+    min-width: 250px; /* Adjust as needed */
+}
+
+.map-container {
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.image-container img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+}
+
+/* Right section */
+#right {
+    flex: 1;
+    min-width: 250px; /* Adjust as needed */
+    max-width: 400px; /* Adjust as needed */
+}
+
+.checklist, #items {
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+/* Buttons and input field */
+button, input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+    #content {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #left, #right {
+        width: 100%;
+        max-width: none;
+    }
+}
+
+
+@media (max-width: 991px){
+    .sidebar{
+        background-color: rgba(255,255,255,0.15);
+        backdrop-filter: blur(10px);
+    }
+}
+
+ 
+/* CSS for chatbot button with a "find me" icon */
+
+
+/* Responsive styles */
+/* CSS for chatbot button with a "find me" icon */
+#chatbot-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    z-index: 1000;
+    font-size: 24px;
+    text-align: justify;
+    line-height: 50px;
+}
+
+#chatbot-button::before {
+    content: "\1F4CD"; /* Unicode for the "location" emoji */
+    align-content:first baseline;
+    font-family: Arial, sans-serif; /* Use a font that supports emojis */
+    font-weight: bold;
+}
+
+#chatbot-button:hover {
+    background-color: #0056b3;
+}
+
+#searchInput {
+    width: 75%; 
+    max-width: 400px; 
+    padding: 10px 20px; 
+    border: none;
+    border-radius: 25px; 
+    background-color: rgba(255, 255, 255, 0.8); 
+    color: #333; 
+    font-size: 16px;
+    outline: none; 
+    transition: width 0.3s ease;
+}
+#searchInput::before {
+    content: "\1F52C";
+    margin-right: 10px;
+}
+
+#searchInput:focus {
+    width: 100%; 
+}
+
+/* Center the search input within its parent container */
+.dropdown2-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+/* Add responsive styles */
+@media (max-width: 768px) {
+    #searchInput {
+        font-size: 14px; /* Adjust font size for smaller screens */
+    }
 }
 
 #inputBox {
@@ -62,68 +201,63 @@ body {
     padding: 10px 20px;
     font-size: 16px;
 }
-
 #content {
     display: flex;
     width: 100%;
     margin-top: 50px;
+    outline: none;
 }
 
 #left {
-    width: 75%;
-    padding: 20px;
-    box-sizing: border-box;
+    width:75%;
+    padding-top: 0;
+    padding-left: 20px;
 }
 
-#left img {
+/*#left img {
     max-width: 100%;
     max-height: 100%;
-}
-
+    
+}*/
+/* this is the image part
 #right {
-    width: 25%;
-    padding: 20px;
-    box-sizing: border-box;
-}
-
-select {
     width: 100%;
+}
+select {
+    width: 80%;
     padding: 10px;
     font-size: 16px;
 }
-
-#getDirections {
-    margin-top: 10px;
-    padding: 10px 20px;
-    font-size: 16px;
+*/
+#right {
+    width: 30%;
+}
+select {
+    width: 100%;
+    padding: 10px;
+    font-size: 18px;
 }
 
 .checklist {
-    width: 45%;
-    padding: 20px;
-    border: 1px solid #ccc;
+    width: 100%;
+    padding-top: 20px;
     border-radius: 5px;
 }
 
-.dropdown-container {
-    position: relative;
-    width: 200px;
-}
-
-.search-box {
-    width: 100%;
-    padding: 5px;
-}
-
-.dropdown {
-    width: 100%;
-    max-height: 200px;
+.dropdown2 {
+    width: 100%; /* Make it wider */
+ /* Limit the maximum width for larger screens */
+    padding-left: 5px;
+    padding-top: 5px;
+    padding-right: 5px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+    color: #0e0d0d; /* Text color */
+    font-size: 14px;
+    outline: none; /* Remove the default input focus outline */
+    transition: width 0.3s ease; /* Add smooth transition for width change */
+    max-height: 500px; /* Adjust as necessary */
     overflow-y: auto;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    display: none;
-    position: absolute;
-    background-color: #fff;
 }
 
 .option {
@@ -134,4 +268,146 @@ select {
 .red{
     padding: 5px;
     color: red;
+}
+
+
+#getDirections, #startNavigation, #exitNavigation {
+    background-color: #4CAF50; /* Green background */
+    color: white; /* White text */
+    padding: 10px 20px; /* Reduced top/bottom and left/right padding */
+    text-align: center; /* Center the text inside */
+    text-decoration: none; /* Remove underline from texts */
+    display: inline-block; /* Align buttons next to each other */
+    font-size: 14px; /* Reduced font size */
+    margin: 4px 2px; /* Margin around buttons */
+    cursor: pointer; /* Cursor pointer */
+    border: none; /* Remove border */
+    border-radius: 4px; /* Slightly rounded corners for a modern look */
+    box-shadow: 0 2px #999; /* Subtle shadow effect for depth */
+    transition: all 0.2s ease; /* Quicker transition for smooth effect on hover/active */
+}
+
+/* Style for hover state */
+#getDirections:hover, #startNavigation:hover, #exitNavigation:hover {
+    background-color: #45a049; /* Slightly darker green */
+    box-shadow: 0 2px #666; /* Darker shadow for depth when hovered */
+    transform: translateY(-1px); /* Slight lift when hovered */
+}
+
+/* Style for active state */
+#getDirections:active, #startNavigation:active, #exitNavigation:active {
+    background-color: #3e8e41; /* Even darker green */
+    box-shadow: 0 1px #666; /* Less shadow to give a 'pressed' effect */
+    transform: translateY(1px); /* Mimic the button being pressed */
+}
+
+/* Hover effect */
+#startNavigation:hover, #getDirections:hover, #exitNavigation:hover {
+    background-color: #45a049; /* Slightly darker shade on hover */
+}
+
+/* Active/click effect */
+#startNavigation:active, #getDirections:active, #exitNavigation:active {
+    background-color: #3e8e41;
+    box-shadow: 0 2px #666; /* Shift shadow to look like button is pressing down */
+    transform: translateY(2px); /* Move the button down on click */
+}
+
+/* Adjust visibility for Start and Exit Navigation buttons */
+#startNavigation, #exitNavigation {
+    display: none; /* Hidden by default, will be shown based on your JS logic */
+}
+
+/* Styling for the container of selected items */
+/* Styling for the container of selected items */
+#selectedItems {
+    padding: 10px;
+    margin-top: 15px;
+    border: 1px solid #e0e0e0;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border-color: #f5ade5;
+    max-height: 250px;
+    overflow-y: auto;
+    width:74%;
+    list-style-type: none; /* Removes the bullet points */
+}
+
+/* If you have individual list items within the container, apply this style */
+#selectedItems li {
+    list-style-type: none; /* Removes the bullet points from individual list items */
+}
+.selected-item {
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.selected-item:last-child {
+    margin-bottom: 0;
+}
+
+/* Styling for item names */
+.item-name {
+    font-size: 16px;
+    color: #333;
+    font-weight: 500;
+}
+
+/* Optional: Remove button style if you'd like to have one */
+.remove-item-btn {
+    padding: 5px 10px;
+    background-color: #ff4c4c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.remove-item-btn:hover {
+    background-color: #ff3232;
+}
+
+
+
+
+.map-container {
+    overflow: auto; /* Enable scrolling */
+    max-height: 100vh; /* Maximum height */
+    max-width: 100%; /* Maximum width to maintain responsiveness */
+  }
+  
+  .scrollable {
+    display: block; /* Allows the image to be block level for width manipulation */
+    max-width: 100%; /* Maximum width to maintain responsiveness */
+    height: auto; /* Maintain aspect ratio */
+  }
+  
+/* Existing styles */
+.datetime-display {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    color: white;
+    font-size: 1em;
+}
+
+@media (max-width: 768px) {
+    .datetime-display {
+        right: 10px;
+        top: 10px;
+        font-size: 0.8em;
+    }
+}
+
+/* New addition to ensure the parent container is relative */
+.navbar .container {
+    position: relative;
 }
