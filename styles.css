@@ -1,5 +1,5 @@
 .footer {
-    padding: 20px 0;
+    padding-top: 200px;
     background-color: #333;
     color: white;
     text-align: center;
@@ -7,18 +7,46 @@
     bottom: 0;
     width: 100%;
 }
+html {
+    scroll-behavior: smooth;
+}
 
+#items {
+    font-family: 'Arial', sans-serif; /* Use a fancy font of your choice */
+    color: #f7f6f7; /* Choose a fancy color */
+    font-size: 24px; /* Set a larger font size */
+    font-weight: bold; /* Make the font bold */
+    /* text-decoration: underline;  Underline the text */
+    /*text-shadow: 2px 2px #D5D8DC;  Add a shadow for a fancy effect */
+}
+/* Assuming your HTML structure has a div around the "Welcome to, [Store Name]" */
+.welcome-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap; /* Prevents the text from wrapping */
+}
+
+#storemsg, #storeName {
+    font-size: 4vw; /* Adjust the size as needed */
+}
+
+/* Media queries to adjust font size on smaller screens */
 @media (max-width: 768px) {
     #storemsg, #storeName {
-        font-size: 14px;
+        font-size: 5vw;
+        text-align: center; /* Slightly larger since the screen is smaller */
     }
 }
 
-@media (max-width: 576px) {
+@media (max-width: 480px) {
     #storemsg, #storeName {
-        font-size: 12px;
+        font-size: 6vw;
+        text-align: center; /* Even larger to accommodate very small screens */
     }
 }
+
 
 /* Overall layout */
 #content {
@@ -27,7 +55,7 @@
     justify-content: center;
     align-items: start;
     gap: 20px;
-    padding: 20px;
+    padding: 10px;
 }
 
 /* Left section */
@@ -114,12 +142,13 @@ button, input[type="text"] {
     cursor: pointer;
     z-index: 1000;
     font-size: 24px;
-    text-align: center;
+    text-align: justify;
     line-height: 50px;
 }
 
 #chatbot-button::before {
     content: "\1F4CD"; /* Unicode for the "location" emoji */
+    align-content:first baseline;
     font-family: Arial, sans-serif; /* Use a font that supports emojis */
     font-weight: bold;
 }
