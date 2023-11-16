@@ -74,7 +74,24 @@ def getDirection(list_items):
         for i in temp_path_start + temp_path_end:
                 path.append(i+1)
         return path
-  
+
+    def func_sort(access_points):
+         # Calculate the distances from access point 89 to all other access points
+        access_point_89 = coord_dict.get("89")
+        distances = {}
+        for point in access_points:
+            if str(point) in coord_dict and point>68:
+                coords = coord_dict.get(str(point))
+                # Calculate the Euclidean distance
+                distance = math.sqrt((access_point_89[0] - coords[0])**2 + (access_point_89[1] - coords[1])**2)
+                distances[point] = distance
+
+        # Sort the access points based on their distances (shortest comes first)
+        access_points = sorted([point for point in access_points if point <= 68])
+        access_points.extend(sorted(distances, key=lambda point: distances[point],reverse =True))
+        return access_points
+    
+
     section = []
     for key, value in section_list.items():
         for i in list_items:
@@ -85,6 +102,7 @@ def getDirection(list_items):
     for i in section:
         access_points.append(access_nodes[i])
     unique_list = list(set(access_points))
+    #access_points = func_sort(access_points)
     path1 = generate_path1(access_points,start=0,end=89)
     dest = []
     for i in path1:
