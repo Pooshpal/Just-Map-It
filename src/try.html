@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.min.css">
+    <link rel="stylesheet" href="C:\Users\prart\Desktop\styles.css" />
+    <title>Just Map It</title>
+  </head>
+  <body class="vh-600" style="background: linear-gradient(135deg, rgb(0, 22, 22), #275b8e);">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-transparent" style="padding-top: 25px;">
+        <div class="container">
+          <div id="datetime" class="datetime-display"></div>
+          <img src="./logo.png" height="2px" width="60px" style="justify-self: flex-start;padding: left -4px;">
+          <!--<a class="navbar-brand fs-4 mt-2" href="#">Just Map It</a>-->
+          <span id="storemsg" class="navbar-brand fs-5 mt-3" style="padding-left:100px;"> Welcome to,</span>
+          <span id="storeName" class="navbar-brand fs-5 mt-3" style="padding-left: 0px;"><!-- Store Name will go here --></span>
+          <button class="navbar-toggler shadow-none border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class=" sidebar offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+            <div class="offcanvas-header text-white border-bottom">
+              <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Just Map It</h5>
+              <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body" style="padding-top: 11px; padding-right:76px;">
+              <ul class="navbar-nav justify-content-center fs-5 flex-grow-1 pe-3">
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="#">Route</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#" id="itemListButton">Item List</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#footer1">Contact Us</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">My cart</a>
+                </li>
+                <li class="nav-item dropdown">
+                  <a id="dropdownMenuButton" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Find Me
+                  </a>
+                  <ul class="dropdown-menu" id="myDropdown">
+                    <li><a class="dropdown-item" href="#" id="btnScanQR">Using QR camera</a>
+                        <div>
+                            <!-- Capture Screenshot, Save, and Retake buttons (initially hidden) -->
+                            <button class="button is-primary is-hidden" id="btnCaptureScreenshot" disabled>
+                                <span class="icon is-small">
+                                    <i class="fas fa-camera"></i>
+                                </span>
+                                <span>Capture Screenshot</span>
+                            </button>
+                            <button class="button is-success is-hidden" id="btnSave" disabled>
+                                <span class="icon is-small">
+                                    <i class="fas fa-save"></i>
+                                </span>
+                                <span>Save</span>
+                            </button>
+                            <button class="button is-hidden" id="btnRetake" disabled>
+                                <span class="icon is-small">
+                                    <i class="fas fa-retweet"></i>
+                                </span>
+                                <span>Retake</span>
+                            </button>
+                            <video id="video" class="is-hidden"></video>
+                            <canvas class="is-hidden" id="canvas"></canvas>
+                        </div>
+                    </li>
+                    <li><a class="dropdown-item" href="#" id="lost">Using Barcode</a></li>
+                    <li>
+                      <hr class="dropdown-divider">
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+              <!--<div class="d-flex justify-content-center align-items-center gap-3">
+                <button class="text-white text-decoration-none px-3 py-1 rounded-4" style="background-color:rgb(240, 25, 25);">Help me I'm Lost</button>
+              </div>-->          
+            </div>
+          </div>
+        </div>
+      </nav>
+      <button id="chatbot-button"></button>
+      <div id="welcome">
+        <input type="text" id="inputBox" placeholder="Enter Server Address">
+        <button id="button1">Proceed to Store</button>
+    </div>
+    
+    <div id="content" style="display:none;">
+        <div id="left" class="map-container">
+                <img id="mapImage" src="" alt="Store Map Placeholder" class="scrollable">
+        </div>
+        <div id="right" style="padding-left:5px;">
+            <div class="checklist">
+                <div class="dropdown2-container" id="dropdown2_main">
+                    <input type="text" id="searchInput" class="search-box" placeholder="Type to start searching">
+                </div>
+                <div class="dropdown2" id="dropdown2"></div>
+                <div class="selected-items" id="selectedItems"></div>
+                <br>
+            </div>
+            <div id="items"></div>
+                <button id="getDirections">Get Directions</button>
+                <br>
+                <button id="startNavigation" style="display:none;">Start Navigation</button>
+                <br>
+                <button id="exitNavigation" style="display:none;">Exit Navigation</button>
+            </div>
+        </div>
+    </div>
+    <footer class="text-white bg-dark" id="footer1">
+        <div class="container py-2">
+            <div class="row">
+                <div class="col-md-4 mb-3 mb-md-0 fs-5">
+                    <br>
+                    <h2>Contact Us: +91 889887456</h2>
+                    <ul class="list-unstyled">
+                        <li><span>Email:</span><a href="#" class="text-white fs-5">justmapit@gmail.com</a></li>
+                        <li><a href="feedback.html" class="text-white fs-5">Support Center</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-3 mb-md-0 fs-5">
+                    <br>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white fs-5"><img src="meta.png" height="20px" width="20px">justmapitstores</a></li>
+                        <li><a href="#" class="text-white fs-5"><img src=insta.png height="20px" width="20px"></a>justmapit</li>
+                        <li><a href="#" class="text-white fs-5"><img src=twitter.png height="20px" width="20px">justmapit</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <img src="banner.png">
+                </div>
+            </div>
+        </div>
+    </footer>
+    <br>
+    <br>
+    <script>
+        function updateDateTime() {
+            var now = new Date();
+            var datetimeStr = now.toLocaleString();
+            document.getElementById('datetime').textContent = datetimeStr;
+        }
+
+        setInterval(updateDateTime, 1000);
+        updateDateTime();
+    </script>
+    <script>
+        var add = 'http://127.0.0.1:8000'
+        var storeImage = null;
+        var storeMetadata = null;
+        const dropdown = document.getElementById("dropdown2");
+        const searchInput = document.getElementById("searchInput");
+        const selectedItems = document.getElementById("selectedItems");
+        const selectedItemsList = [];
+        const saveButton = document.getElementById("saveButton");
+        var counterFlag = false;
+        var directionData = null;
+        var counter = 0;
+        document.getElementById('button1').addEventListener('click', function() {
+            
+            document.getElementById('welcome').innerHTML = '';
+            document.getElementById('content').style.display = 'flex';
+            document.getElementById('getDirections').style.display = 'none';
+            
+            fetch(add+'/api/getMap/')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                data = data['msg'];
+                storeImage = data;
+                var imageElement = document.getElementById('mapImage');
+                imageElement.src = 'data:image/png;base64,' + data;
+            })
+            .catch(error => {
+                // Display an error popup
+                alert(`Error fetching map: ${error.message}`);
+            });
+            
+            fetch(add+'/api/getMetadata/')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                storeMetadata = data;
+                const items = data['available_items'];
+                dropdown.innerHTML = ''; // Clear existing options
+                for (const item in items) 
+                {
+                    const option = document.createElement("div");
+                    option.className = items[item] === 0 ? "option red" : "option";
+                    option.innerHTML = `<input type="checkbox" class="checkbox" value="${item}" ${items[item] === 0 ? 'disabled' : ''}> ${item}`;
+                    dropdown.appendChild(option);
+                } 
+                searchInput.addEventListener("focus", filterOptions);
+                searchInput.addEventListener("input", filterOptions);
+                function filterOptions() 
+                {
+                    const searchValue = searchInput.value.toLowerCase();
+                    const options = document.querySelectorAll(".option");
+                    options.forEach(option => 
+                    {
+                        const text = option.textContent.toLowerCase();
+                        const isMatch = text.includes(searchValue);
+                        option.style.display = isMatch ? "block" : "none";
+                    });
+                    dropdown.style.display = "block";
+                }
+                dropdown.addEventListener("click", event => 
+                {
+                    if (event.target.classList.contains("option")) 
+                    {
+                        searchInput.value = event.target.textContent.trim();
+                        dropdown.style.display = "none";
+                    }
+                });
+                dropdown.addEventListener("change", updateSelectedItems);
+                function updateSelectedItems() 
+                {
+                    selectedItemsList.length = 0; // Clear the selected items list
+                    const checkboxes = document.querySelectorAll(".checkbox:checked");
+                    checkboxes.forEach((checkbox) => 
+                    {
+                        const label = checkbox.value;
+                        selectedItemsList.push(label);
+                    });
+                    selectedItems.innerHTML = ""; 
+                    let itemNumber = 1;
+                    selectedItemsList.forEach((item) => {
+                        const listItem = document.createElement("li");
+                        listItem.textContent = `${itemNumber}. ${item}`;
+                        selectedItems.appendChild(listItem);
+                        itemNumber++;
+                    });
+                    updateSelectedItemsDisplay();
+                    document.getElementById('getDirections').style.display = selectedItemsList.length > 0 ? 'block' : 'none';
+                }
+            })
+            .catch(error => {
+                // Display an error popup
+                alert(`Error fetching items: ${error.message}`);
+            });
+
+            document.addEventListener("click", event => {
+                if (event.target !== searchInput) {
+                    dropdown.style.display = "none";
+                }
+            });
+
+            document.getElementById('getDirections').style.display = selectedItemsList.length > 0 ? 'block' : 'none';
+        });
+
+                
+                //Lost
+                document.getElementById('chatbot-button').addEventListener('click', function() {
+                    var inputElement = document.createElement('input');
+                    inputElement.type = 'file';
+                    
+                    // Set up event listener for when a file is selected
+                    inputElement.addEventListener('change', function() {
+                        var file = inputElement.files[0]; // Get the selected file
+                        
+                        // Check if a file was selected
+                        if (file) {
+                            var reader = new FileReader();
+                            
+                            // Set up event listener for when the file is loaded
+                            reader.onload = function(event) {
+                                var base64Image = event.target.result.split(',')[1]; // Get base64 encoded image data
+                                
+                                // Send the base64Image to your API
+                                fetch(add + '/api/get_qr/', {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                    },
+                                    body: JSON.stringify({ "msg": base64Image }), // Send base64 image data
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    // Handle the response from the backend as needed
+                                    data=data["msg"]
+                                    alert(JSON.stringify(data["info"]));
+                                    // Assuming `temp` contains the base64 encoded image data
+                                    temp = 'data:image/png;base64,' + data['image']; // Replace with your actual base64 image data
+                                    
+                                    // Create a new image element
+                                    var imgElement = document.createElement('img');
+                                    imgElement.src = temp; // Set the source of the image to the base64 data
+                                    
+                                    // Create a new dialog element
+                                    var dialogElement = document.createElement('dialog');
+                                    dialogElement.appendChild(imgElement); // Add the image to the dialog
+                                    
+                                    // Create a button to close the dialog
+                                    var closeButton = document.createElement('button');
+                                    closeButton.textContent = 'Close';
+                                    closeButton.addEventListener('click', function() {
+                                        dialogElement.close();
+                                    });
+                                    
+                                    // Add the close button to the dialog
+                                    dialogElement.appendChild(closeButton);
+                                    
+                                    // Append the dialog to the document body
+                                    document.body.appendChild(dialogElement);
+                                    
+                                    // Open the dialog
+                                    dialogElement.showModal();
+                                    
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                });
+                            }
+                            
+                            // Read the file as a data URL
+                            reader.readAsDataURL(file);
+                        }
+                        
+                        // Remove the input element from the document
+                        inputElement.remove();
+                    });
+                    
+                    // Trigger a click event on the input element to open the file dialog
+                    inputElement.click();
+                });
+
+                // Lost2
+                document.getElementById('lost').addEventListener('click', function() {
+                    var inputElement = document.createElement('input');
+                    inputElement.type = 'file';
+                    
+                    // Set up event listener for when a file is selected
+                    inputElement.addEventListener('change', function() {
+                        var file = inputElement.files[0]; // Get the selected file
+                        
+                        // Check if a file was selected
+                        if (file) {
+                            var reader = new FileReader();
+                            
+                            // Set up event listener for when the file is loaded
+                            reader.onload = function(event) {
+                                var base64Image = event.target.result.split(',')[1]; // Get base64 encoded image data
+                                
+                                // Send the base64Image to your API
+                                fetch(add + '/api/get_qr/', {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                    },
+                                    body: JSON.stringify({ "msg": base64Image }), // Send base64 image data
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    // Handle the response from the backend as needed
+                                    data=data["msg"]
+                                    alert(JSON.stringify(data["info"]));
+                                    // Assuming `temp` contains the base64 encoded image data
+                                    temp = 'data:image/png;base64,' + data['image']; // Replace with your actual base64 image data
+                                    
+                                    // Create a new image element
+                                    var imgElement = document.createElement('img');
+                                    imgElement.src = temp; // Set the source of the image to the base64 data
+                                    
+                                    // Create a new dialog element
+                                    var dialogElement = document.createElement('dialog');
+                                    dialogElement.appendChild(imgElement); // Add the image to the dialog
+                                    
+                                    // Create a button to close the dialog
+                                    var closeButton = document.createElement('button');
+                                    closeButton.textContent = 'Close';
+                                    closeButton.addEventListener('click', function() {
+                                        dialogElement.close();
+                                    });
+                                    
+                                    // Add the close button to the dialog
+                                    dialogElement.appendChild(closeButton);
+                                    
+                                    // Append the dialog to the document body
+                                    document.body.appendChild(dialogElement);
+                                    
+                                    // Open the dialog
+                                    dialogElement.showModal();
+                                    
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                });
+                            }
+                            
+                            // Read the file as a data URL
+                            reader.readAsDataURL(file);
+                        }
+                        
+                        // Remove the input element from the document
+                        inputElement.remove();
+                    });
+                    
+                    // Trigger a click event on the input element to open the file dialog
+                    inputElement.click();
+                });
+                
+                
+                
+                // Get Direction
+                document.getElementById('getDirections').addEventListener('click', function() {
+                    // Fetch directions data from backend
+                    var jsonData = JSON.stringify({ msg: selectedItemsList });
+                    fetch(add+'/api/getDirections/?' + new URLSearchParams({msg: jsonData}))
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        directionData = data["path"];
+                        var imageElement = document.getElementById('mapImage');
+                        imageElement.src = 'data:image/png;base64,' + data["image"];
+                        document.getElementById('startNavigation').style.display = 'block';
+                        document.getElementById('exitNavigation').style.display = 'block';
+                        document.getElementById('getDirections').style.display = 'none';
+                    })
+                    .catch(error => {
+                        // Display an error popup
+                        alert(`Error fetching directions: ${error.message}`);
+                    });
+                });
+                
+                //Exit Navigation
+                document.getElementById('exitNavigation').addEventListener('click', function() {
+                    counterFlag = false;
+                    counter = 0;
+                    
+                    // Image
+                    var imageElement = document.getElementById('mapImage');
+                    imageElement.src = 'data:image/png;base64,' + storeImage;
+                    
+                    //Item List
+                    const items = storeMetadata['available_items'];
+                    for (const item in items) 
+                    {
+                        const option = document.createElement("div");
+                        option.className = "option";
+                        if (items[item] === 0) {option.className = "red";}
+                        option.innerHTML = `<input type="checkbox" class="checkbox" value="${item}" ${items[item] === 0 ? 'disabled' : ''}> ${item}`;
+                        dropdown.appendChild(option);
+                    } 
+                    searchInput.addEventListener("focus", filterOptions);
+                    searchInput.addEventListener("input", filterOptions);
+                    function filterOptions() 
+                    {
+                        const searchValue = searchInput.value.toLowerCase();
+                        const options = document.querySelectorAll(".option");
+                        options.forEach(option => 
+                        {
+                            const text = option.textContent.toLowerCase();
+                            if (text.includes(searchValue)) {option.style.display = "block";} 
+                            else {option.style.display = "none";}
+                        });
+                        dropdown.style.display = "block";
+                    }
+                    dropdown.addEventListener("click", event => 
+                    {
+                        if (event.target.classList.contains("option")) 
+                        {
+                            searchInput.value = event.target.textContent;
+                            dropdown.style.display = "none";
+                        }
+                    });
+                    dropdown.addEventListener("change", updateSelectedItems);
+                    function updateSelectedItems() 
+                    {
+                        selectedItemsList.length = 0; // Clear the selected items list
+                        const checkboxes = document.querySelectorAll(".checkbox:checked");
+                        checkboxes.forEach((checkbox) => 
+                        {
+                            const label = checkbox.value;
+                            selectedItemsList.push(label);
+                        });
+                        selectedItems.innerHTML = ""; 
+                        itemNumber = 1;
+                        selectedItemsList.forEach((item) => {
+                            const listItem = document.createElement("li");
+                            listItem.textContent = `${itemNumber}. ${item}`;
+                            selectedItems.appendChild(listItem);
+                            itemNumber++;
+                        });
+                    }
+                    document.addEventListener("click", event => {if (event.target !== searchInput) {dropdown.style.display = "none";}});
+                    document.getElementById('dropdown2_main').style.display = 'block';
+                    document.getElementById('items').innerHTML = '';
+                    document.getElementById('startNavigation').style.display = 'none';
+                    document.getElementById('exitNavigation').style.display = 'none';
+                    document.getElementById('getDirections').style.display = 'block';
+                });
+                function itemsAreSelected() {
+                    return selectedItemsList.length > 0;
+                }
+                
+                document.addEventListener('DOMContentLoaded', function() {
+                    // ... existing code ...
+                
+                    // Ensure the selected items div is in the correct state on page load
+                    updateSelectedItemsDisplay();
+                });
+                function updateSelectedItemsDisplay() {
+                    var selectedItemsDiv = document.getElementById('selectedItems');
+                    // Assuming you have a way to check if items are selected
+                    if (itemsAreSelected()) { // Replace with your actual condition check
+                        selectedItemsDiv.style.display = 'block';
+                    } else {
+                        selectedItemsDiv.style.display = 'none';
+                    }
+                }
+                // Start Navigation
+                document.getElementById('startNavigation').addEventListener('click', function() {
+                    // Fetch directions data from backend
+                    var temp = Object.values(directionData)[counter]
+                    var jsonData = JSON.stringify({ msg: temp["path"] });
+                    
+                    document.getElementById('startNavigation').innerHTML = 'Next Stop';
+                    document.getElementById('startNavigation').style.display = 'block';
+                    document.getElementById('exitNavigation').style.display = 'block';
+                    document.getElementById('getDirections').style.display = 'none';
+                    document.getElementById('dropdown2_main').style.display = 'none';
+                    document.getElementById('items').innerHTML = temp["item"];
+                    fetch(add+'/api/getVisualization/?' + new URLSearchParams({msg: jsonData}))
+                    .then(response => response.json())
+                    .then(data => {
+                        var imageElement = document.getElementById('mapImage');
+                        imageElement.src = 'data:image/png;base64,' + data['msg'];
+                        
+                    });    
+                    
+                    
+                    
+                    if (Object.keys(directionData)[counter] == "billing"){
+                        document.getElementById('startNavigation').innerHTML = 'Start Navigation';
+                        document.getElementById('startNavigation').style.display = 'none';
+                    }
+                    counter=counter+1;
+                    
+                });
+                function updateSelectedItemsDisplay() {
+                    var selectedItemsDiv = document.getElementById('selectedItems');
+                    // Assuming you have a way to check if items are selected
+                    if (itemsAreSelected()) { // Replace with your actual condition check
+                        selectedItemsDiv.style.display = 'block';
+                    } else {
+                        selectedItemsDiv.style.display = 'none';
+                    }
+                }
+            </script>
+            <script>
+                (function () {
+                  const dropdown = document.getElementById("myDropdown");
+                  const dropdownToggle = document.getElementById("dropdownMenuButton");                  
+                  const btnScanQR = document.querySelector("#btnScanQR");
+                  const video = document.querySelector("#video");
+                  const btnCaptureScreenshot = document.querySelector("#btnCaptureScreenshot");
+                  const btnSave = document.querySelector("#btnSave");
+                  const btnRetake = document.querySelector("#btnRetake");
+                  const screenshotsContainer = document.querySelector("#screenshots");
+                  const canvas = document.querySelector("#canvas");
+                  let videoStream;
+                  let isCameraOn = false;
+                  btnScanQR.addEventListener("click", function (event) {
+                    event.stopPropagation(); 
+                    if (!dropdown.classList.contains("show")) {
+                        // Show the dropdown if it's not already shown
+                        dropdown.classList.add("show");
+                        }
+                    if (!isCameraOn) {
+                      // video constraints
+                      const constraints = {
+                        video: true
+                      };
+            
+                      // Request camera access
+                      navigator.mediaDevices.getUserMedia(constraints)
+                        .then((stream) => {
+                          videoStream = stream;
+                          video.srcObject = stream;
+                          video.play();
+                          video.classList.remove("is-hidden");
+                          // Show the hidden buttons when camera access is allowed
+                          btnCaptureScreenshot.classList.remove("is-hidden");
+                          btnSave.classList.remove("is-hidden");
+                          btnRetake.classList.remove("is-hidden");
+                          // Enable the "Capture Screenshot" button
+                          btnCaptureScreenshot.disabled = false;
+                          isCameraOn = true;
+                        })
+                        .catch((err) => {
+                          alert("Could not access the camera");
+                        });
+                    }
+                    else {
+                        // Camera is on, turn it off
+                      videoStream.getTracks().forEach((track) => {
+                           track.stop();
+                       });
+                        videoStream = null;
+                        video.classList.add("is-hidden");
+                        canvas.classList.add("is-hidden");
+                        btnCaptureScreenshot.classList.add("is-hidden");
+                        btnSave.classList.add("is-hidden");
+                        btnRetake.classList.add("is-hidden");
+                        isCameraOn = false;
+                        }
+                    });
+                        
+                  btnCaptureScreenshot.addEventListener("click", function (event) {
+                    event.stopPropagation();
+                    if (videoStream) {
+                      // Hide the video preview
+                      video.classList.add("is-hidden");
+                      // Show the canvas
+                      canvas.classList.remove("is-hidden");
+                      // Disable the "Capture Screenshot" button
+                      btnCaptureScreenshot.disabled = true;
+                      // Enable the "Save" and "Retake" buttons
+                      btnSave.disabled = false;
+                      btnRetake.disabled = false;
+            
+                      // Take a screenshot
+                      canvas.width = video.videoWidth;
+                      canvas.height = video.videoHeight;
+                      const ctx = canvas.getContext("2d");
+                      ctx.drawImage(video, 0, 0);
+                    }
+                  });
+            
+                  btnSave.addEventListener("click", function () {
+                    const img = document.createElement("img");
+                    var screenshotDataUrl = canvas.toDataURL("image/png");
+                    img.src = screenshotDataUrl;
+                    videoStream.getTracks().forEach((track) => {
+                            track.stop();
+                        });
+                        videoStream = null;
+                        video.classList.add("is-hidden");
+                        canvas.classList.add("is-hidden");
+                        btnCaptureScreenshot.classList.add("is-hidden");
+                        btnSave.classList.add("is-hidden");
+                        btnRetake.classList.add("is-hidden");
+                        isCameraOn = false;
+                    //console.log(jsonImage);
+                    screenshotDataUrl = screenshotDataUrl.split(",")[1];
+                    console.log(screenshotDataUrl)
+                    fetch(add+'/api/get_qr/' ,{
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ "msg": screenshotDataUrl }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Handle the response from the backend as needed
+                        alert(JSON.stringify(data));
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                    //    });
+                    });
+            
+                  btnRetake.addEventListener("click", function (event) {
+                    // Hide the canvas
+                    event.stopPropagation();
+                    canvas.classList.add("is-hidden");
+                    // Show the video preview
+                    video.classList.remove("is-hidden");
+                    // Disable the "Save" and "Retake" buttons
+                    btnSave.disabled = true;
+                    btnRetake.disabled = true;
+                    // Enable the "Capture Screenshot" button
+                    btnCaptureScreenshot.disabled = false;
+                  });
+                })();
+                document.addEventListener("click", function (event) {
+                    // Check if the clicked element is inside the dropdown or the dropdown toggle button
+                    if (
+                    event.target !== btnScanQR &&
+                    !dropdown.contains(event.target) &&
+                    event.target !== dropdownToggle
+                    ) {
+                    // Close the dropdown if the click is outside
+                    dropdown.classList.remove("show");
+                    // ... Any other actions to perform when closing the dropdown ...
+                    }
+                });
+              </script>
+            
+  </body>
+</html>
