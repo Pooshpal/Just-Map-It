@@ -3,7 +3,7 @@
     background-color: #333;
     color: white;
     text-align: center;
-    position: relative; /* Or 'fixed' if you want it always visible at the bottom */
+    position: relative; /*Or 'fixed' if you want it always visible at the bottom */
     bottom: 0;
     width: 100%;
 }
@@ -11,14 +11,125 @@ html {
     scroll-behavior: smooth;
 }
 
+.popup-hidden {
+    display: none;
+    /* Add more styling as needed */
+}
+.popup-visible {
+    display: block;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%; /* Responsive width */
+    max-width: 600px; /* Maximum width */
+    height: 3200px; /* Height based on content */
+    max-height: 80%; /* Maximum height */
+    overflow-y: auto; /* Scrollbar for overflow */
+    background: white; /* Background color */
+    padding: 20px; /* Padding inside the pop-up */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Shadow for pop-up */
+    z-index: 1000; /* Ensure it's on top */
+}
+
+/* Add this for your close button */
+#closebutton {
+    position: absolute;
+    top: 0px;
+    right: 10px;
+    cursor: pointer;
+    background-color: #fff; /* Button background */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners for the button */
+    padding: 5px 10px; /* Padding inside the button */
+    font-size: 16px; /* Font size */
+    z-index: 1001; /* Above the popup */
+}
+
+
+#popupContent {
+    background-color: #fff; /* White background for the card */
+    padding-top: 220px;
+    color: #130101; /* Dark text for readability */
+    border-radius: 8px; /* Rounded corners for the card-like look */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    padding: 20px; /* Space inside the card */
+    margin: 10px; /* Space outside the card */
+    max-width: 600px; /* Maximum width of the card */
+    word-wrap: break-word; /* Ensures the content breaks to avoid overflow */
+    box-sizing: border-box; /* Includes padding and border in the element's total width and height */
+    position: fixed; /* Fixed position to stay in place when scrolling */
+    left: 50%; /* Center the card horizontally */
+    top: 50%; /* Center the card vertically */
+    transform: translate(-50%, -50%); /* Offset the card to the exact center */
+    z-index: 1000; /* Make sure the card is above other content */
+    overflow-y: auto; /* Enable scroll if content is too long */
+     /* Maximum height of the card */
+     /* Adjust this value as needed */
+    font-size: 20px; /* Increase font size if needed */
+    
+}
+#closebutton{
+    z-index: 1200;
+}
+/* Existing CSS above */
+
+.selected-items-popup {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    padding-top: 60px;
+    z-index: 1000; /* Sit on top */
+}
+
+.selected-items-popup .popup-content {
+    background-color: #fefefe;
+    margin: 5% auto; /* 5% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+    z-index: 1001;
+}
+
+/* The Close Button */
+.selected-items-popup .popup-close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.selected-items-popup .popup-close:hover,
+.selected-items-popup .popup-close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* End of CSS */
+
 #items {
     font-family: 'Arial', sans-serif; /* Use a fancy font of your choice */
     color: #f7f6f7; /* Choose a fancy color */
-    font-size: 24px; /* Set a larger font size */
+    font-size: 36px; /* Set a larger font size */
     font-weight: bold; /* Make the font bold */
+    box-sizing: border-box;
+    padding: 10px; /* Adjust as needed */
+    font-size: 16px; /* Adjust as needed */
+    overflow: hidden; /* This will hide any overflow */
+    word-wrap: break-word; /* This will break long words if needed */
+    max-width: 100%; /
     /* text-decoration: underline;  Underline the text */
     /*text-shadow: 2px 2px #D5D8DC;  Add a shadow for a fancy effect */
 }
+*/
 /* Assuming your HTML structure has a div around the "Welcome to, [Store Name]" */
 .welcome-container {
     display: flex;
