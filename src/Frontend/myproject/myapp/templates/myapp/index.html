@@ -15,7 +15,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-transparent" style="padding-top: 25px;">
         <div class="container">
           <div id="datetime" class="datetime-display"></div>
-          <img src="logo.jpg" height="5px" width="50px" style="justify-self: flex-start;padding: left -4px;">
+          <img src="{% static 'myapp/logo.jpg' %}" height="5px" width="50px" style="justify-self: flex-start;padding: left -4px;">
           <!--<a class="navbar-brand fs-4 mt-2" href="#">Just Map It</a>-->
           <span id="storemsg" class="navbar-brand fs-5 mt-3" style="padding-left:100px;"> Welcome to,</span>
           <span id="storeName" class="navbar-brand fs-5 mt-3" style="padding-left: 0px;"><!-- Store Name will go here --></span>
@@ -87,6 +87,7 @@
       </nav>
       <button id="chatbot-button"></button>
       <div id="welcome">
+        <img src="{% static 'myapp/cart.png' %}">
         <button id="button1">Proceed to Store</button>
     </div>
     
@@ -98,6 +99,10 @@
             <div class="checklist">
                 <div class="dropdown2-container" id="dropdown2_main">
                     <input type="text" id="searchInput" class="search-box" placeholder="Type to start searching">
+                    <button id="clearCart" style="border: none; background: none; padding: 0;">
+                        <img src="{% static 'myapp/bin.png' %}" style="padding-left:height:50px; width:50px;">
+                    </button>
+                    
                 </div>
                 <div class="dropdown2" id="dropdown2"></div>
                 <div class="selected-items" id="selectedItems" style="margin-left:50px;"></div>
@@ -148,7 +153,7 @@
                     </ul>
                 </div>
                 <div class="col-md-4 mb-3 mb-md-0">
-                    <img src="banner.png">
+                    <img src="{% static 'myapp/banner.png' %}">
                 </div>
             </div>
         </div>
@@ -196,7 +201,7 @@
     </script>      
     <script>
         //var add = 'http://127.0.0.1:8000'
-        var add = 'https://192.168.0.107:8000'
+        var add = 'https://192.168.102.201:8000'
         var storeImage = null;
         var storeMetadata = null;
         const dropdown = document.getElementById("dropdown2");
@@ -494,6 +499,7 @@
                     .then(response => response.json())
                     .then(data => {
                         directionData = data["path"]
+                        console.log(data);
                         var imageElement = document.getElementById('mapImage');
                         imageElement.src = 'data:image/png;base64,' + data["image"];
                         document.getElementById('startNavigation').style.display = 'block';
@@ -628,6 +634,73 @@
                         selectedItemsDiv.style.display = 'none';
                     }
                 }
+                clearbutton=document.getElementById("clearCart")
+                clearbutton.addEventListener("click", function (event) {
+                    
+                    var selectedItemsList = document.getElementById("selectedItemsList");
+                    selectedItemsList.innerHTML = [];
+                    console.log(selectedItemsList); 
+                    document.getElementById("selectedItems").innerText='';
+                    data=storeMetadata;
+                    const items = data['available_items'];
+                    dropdown.innerHTML = ''; // Clear existing options
+                for (const item in items) 
+                {
+                    const option = document.createElement("div");
+                    option.className = items[item] === 0 ? "option red" : "option";
+                    option.innerHTML = `<input type="checkbox" class="checkbox" value="${item}" ${items[item] === 0 ? 'disabled' : ''}> ${item}`;
+                    dropdown.appendChild(option);
+                } 
+                searchInput.addEventListener("focus", filterOptions);
+                searchInput.addEventListener("input", filterOptions);
+                function filterOptions() 
+                {
+                    const searchValue = searchInput.value.toLowerCase();
+                    const options = document.querySelectorAll(".option");
+                    options.forEach(option => 
+                    {
+                        const text = option.textContent.toLowerCase();
+                        const isMatch = text.includes(searchValue);
+                        option.style.display = isMatch ? "block" : "none";
+                    });
+                    dropdown.style.display = "block";
+                }
+                dropdown.addEventListener("click", event => 
+                {
+                    if (event.target.classList.contains("option")) 
+                    {
+                        searchInput.value = event.target.textContent.trim();
+                        dropdown.style.display = "none";
+                    }
+                });
+                dropdown.addEventListener("change", updateSelectedItems);
+                function updateSelectedItems() 
+                {
+                    selectedItemsList.length = 0; // Clear the selected items list
+                    const checkboxes = document.querySelectorAll(".checkbox:checked");
+                    checkboxes.forEach((checkbox) => 
+                    {
+                        const label = checkbox.value;
+                        selectedItemsList.push(label);
+                    });
+                    selectedItems.innerHTML = ""; 
+                    let itemNumber = 1;
+                    selectedItemsList.forEach((item) => {
+                        const listItem = document.createElement("li");
+                        listItem.textContent = `${itemNumber}. ${item}`;
+                        selectedItems.appendChild(listItem);
+                        itemNumber++;
+                    });
+                    updateSelectedItemsDisplay();
+                    document.getElementById('getDirections').style.display = selectedItemsList.length > 0 ? 'block' : 'none';
+                }
+            });
+            document.addEventListener("click", event => {
+                if (event.target !== searchInput) {
+                    dropdown.style.display = "none";
+                }
+            
+                }); 
             </script>
             <script>
                 (function () {
